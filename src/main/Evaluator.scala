@@ -4,7 +4,7 @@ import com.google.common.cache.{CacheBuilder, CacheLoader}
 import org.nlogo.api.{ExtensionException, SimpleJobOwner, World, AnonymousCommand, AnonymousProcedure, Context}
 import org.nlogo.core.{AgentKind, LogoList, Nobody, Syntax}
 import org.nlogo.nvm
-import org.nlogo.nvm.{Job, Procedure, Reporter}
+import org.nlogo.nvm.{Job, ProcedureInterface, Reporter}
 import org.nlogo.prim.{_constboolean, _constdouble, _constlist, _conststring, _nobody}
 import org.nlogo.workspace.AbstractWorkspaceScala
 
@@ -25,7 +25,7 @@ class Evaluator(name: String, ws: AbstractWorkspaceScala) {
   def report(code: String, lets: Seq[(String, AnyRef)], args: Seq[AnyRef]): FutureJob[AnyRef] =
     run(code, lets, args, "__apply-result", reporterRunner _, checkResult)
 
-  def run[T](code: String, lets: Seq[(String, AnyRef)], args: Seq[AnyRef], apply: String, runner: (Reporter, Seq[AnyRef]) => Procedure, handleResult: AnyRef => T): FutureJob[T] = {
+  def run[T](code: String, lets: Seq[(String, AnyRef)], args: Seq[AnyRef], apply: String, runner: (Reporter, Seq[AnyRef]) => ProcedureInterface, handleResult: AnyRef => T): FutureJob[T] = {
     val fullCode = s"[ [ __levelspace-argument-list ${lets.map(_._1).mkString(" ")} ] -> $apply [ $code ] __levelspace-argument-list]"
 
     val fullArgs = LogoList.fromVector(args.toVector) +: lets.map(_._2)
@@ -77,12 +77,12 @@ class Evaluator(name: String, ws: AbstractWorkspaceScala) {
   private def makeArgumentArray(task: Reporter, args: Seq[AnyRef]): Array[Reporter] =
     (task +: args.map(makeConstantReporter _)).toArray
 
-  private def reporterRunner(task: Reporter, args: Seq[AnyRef]): Procedure = {
+  private def reporterRunner(task: Reporter, args: Seq[AnyRef]): ProcedureInterface = {
     reporterRunner.code(0).args(0).args = makeArgumentArray(task, args)
     reporterRunner
   }
 
-  private def commandRunner(task: Reporter, args: Seq[AnyRef]): Procedure = {
+  private def commandRunner(task: Reporter, args: Seq[AnyRef]): ProcedureInterface = {
     commandRunner.code(0).args = makeArgumentArray(task, args)
     commandRunner
   }
