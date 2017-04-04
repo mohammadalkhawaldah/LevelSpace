@@ -31,7 +31,7 @@ class Evaluator(name: String, ws: AbstractWorkspaceScala) {
     val fullArgs = LogoList.fromVector(args.toVector) +: lets.map(_._2)
 
     val proc = runner(getLambda(fullCode), fullArgs)
-    val job = ws.jobManager.makeConcurrentJob(owner, ws.world.observers, ws, proc)
+    val job = ws.jobManager.makeConcurrentJob(owner, ws.world.observers, proc)
     ws.jobManager.addJob(job, waitForCompletion = false)
     (w: World) => UnlockAndBlock(w) {
       while (job.state != Job.REMOVED) {

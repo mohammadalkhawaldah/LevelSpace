@@ -10,7 +10,7 @@ class NotifyingJob(notifyObject: AnyRef,
                    owner: JobOwner,
                    agentSet: AgentSet,
                    procedure: Procedure)
-extends ConcurrentJob(owner, agentSet, procedure, 0, null, workspace, owner.random) {
+extends ConcurrentJob(owner, agentSet, procedure, 0, null, owner.random) {
   override def finish = {
     super.finish
     notifyObject.synchronized {

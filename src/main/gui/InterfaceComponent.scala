@@ -12,7 +12,7 @@ import org.nlogo.awt.EventQueue
 import org.nlogo.core.{AgentKind, Model}
 import org.nlogo.lite.ProceduresLite
 import org.nlogo.window.Events.{CompiledEvent, LoadModelEvent}
-import org.nlogo.window.{CompilerManager, DefaultEditorFactory, Event, FileController, GUIWorkspace, InterfacePanelLite, LinkRoot, NetLogoListenerManager, OutputWidget, ReconfigureWorkspaceUI, UpdateManager}
+import org.nlogo.window.{CompilerManager, DefaultEditorFactory, Event, FileController, GUIWorkspace, InterfacePanelLite, LinkRoot, NetLogoListenerManager, OutputWidget, ReconfigureWorkspaceUI, SwingUnlockedExecutionContext, UpdateManager}
 import org.nlogo.workspace.OpenModelFromURI
 import org.nlogo.{api, fileformat}
 
@@ -88,8 +88,8 @@ with ControlSet {
     interfacePanel.reset()
     val controller = new FileController(this, workspace)
     val loader = fileformat.basicLoader
-    val modelOpt = OpenModelFromURI(uri, controller, loader, fileformat.defaultConverter, Version)
-    modelOpt.foreach(model => ReconfigureWorkspaceUI(this, uri, ModelType.Library, model, workspace))
+    val modelOpt = new OpenModelFromURI(SwingUnlockedExecutionContext)(uri, controller, loader, fileformat.defaultConverter, Version)
+    modelOpt.foreach(model => ReconfigureWorkspaceUI(this, uri, ModelType.Library, model, workspace))(SwingUnlockedExecutionContext)
   }
 
   protected def createInterfacePanel(workspace: GUIWorkspace): InterfacePanelLite
