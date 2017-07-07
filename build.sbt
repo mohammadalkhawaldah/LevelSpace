@@ -22,6 +22,7 @@ javaSource in Compile := baseDirectory.value / "src" / "main"
 scalacOptions ++= Seq("-deprecation", "-unchecked", "-Xfatal-warnings", "-encoding", "us-ascii", "-feature")
 
 libraryDependencies ++= Seq(
+  "commons-codec" % "commons-codec" % "1.10" % "test",
   "org.scalatest" %% "scalatest" % "3.0.0" % "test",
   "org.picocontainer" % "picocontainer" % "2.13.6" % "test",
   "org.parboiled" %% "parboiled" % "2.1.3",
