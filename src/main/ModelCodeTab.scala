@@ -72,7 +72,7 @@ with ModelSavedEvent.Handler {
     try {
       if (dirty && userWantsToSaveFile())
         save()
-      tabs.remove(this)
+      tabs.asAbstractTabsPanel.removeTab(this)
       modelManager.removeTab(this)
     } catch {
       case e: UserCancelException =>
