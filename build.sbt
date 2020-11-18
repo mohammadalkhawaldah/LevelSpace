@@ -57,4 +57,4 @@ test in Test := {
 }
 
 //netLogoVersion := "6.1.1-c82c397"
-netLogoVersion := "6.1.1-ae0e6cb"
+netLogoVersion := "6.1.1-c490805-dirty"
